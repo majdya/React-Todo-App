@@ -1,12 +1,20 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+"use client";
 
-function App() {
+import TodoList from "./components/views/TodoList";
+
+import "./App.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+const App = () => {
   return (
     <>
-      <Button>Add ToDo</Button>
+      <QueryClientProvider client={queryClient}>
+        <TodoList></TodoList>
+      </QueryClientProvider>
     </>
   );
-}
+};
 
 export default App;
