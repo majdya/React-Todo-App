@@ -3,3 +3,7 @@ export interface Todo {
   title: string;
   completed: boolean;
 }
+
+export interface TodoCardProps extends Todo {
+  onClick: () => void;
+}
