@@ -5,5 +5,6 @@ export interface Todo {
 }
 
 export interface TodoCardProps extends Todo {
-  onClick: () => void;
+  onClick: (id: string) => void;
+  onRemove: (id: string) => void;
 }
