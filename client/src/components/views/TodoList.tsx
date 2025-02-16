@@ -1,5 +1,5 @@
 // src/components/TodoList.jsx
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "@/queries/todosQueries";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Todo } from "@/types/todo";
 import TodoCard from "./TodoCard";
 import { v4 as uuidv4 } from "uuid";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid"; // Import search icon (example)
+
+import { Search, Plus } from "lucide-react";
 
 const TodoList = () => {
   const { data: initialTodos, isLoading } = useQuery({
@@ -65,44 +66,49 @@ const TodoList = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col w-[95%] items-center mt-20 gap-5">
-      <div className="flex flex-col ">
-        <div className="flex flex-row gap-5">
+    <>
+      <div
+        className={`
+        container mx-auto 
+        max-w-[90%] lg:max-w-[50%]   
+        mt-6  
+        p-4 lg:p-8
+        rounded-3xl  bg-gray-200
+         `}
+      >
+        <div className="flex items-center mt-4 gap-3">
           <Input
-            className="w-full"
-            placeholder="New Todo"
+            placeholder="Add a New Todo"
             value={newTodoText}
             onChange={(e) => setNewTodoText(e.target.value)}
+            className="flex-grow"
           />
-          <Button className="w-fit" onClick={handleAddTodo}>
-            Add Todo
+          <Button onClick={handleAddTodo}>
+            <Plus size={40} />
           </Button>
         </div>
-        {/* Search Input */}
-        {/* Icon container */}
-        {/* Add the icon */}
-        <div className="flex items-center gap-12 pl-3 ">
+
+        <div className="flex items-center mt-4 gap-3">
           <Input
-            className="full"
-            placeholder="Search Todos"
+            placeholder="Search in Todos"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-grow"
           />
-          <MagnifyingGlassCircleIcon className="h-20 w-20 pointer-events-none" />
+          <Search size={40} />
+        </div>
+
+        <div className="grid grid-cols-1  mt-4">
+          {filteredTodos.map((todo) => (
+            <TodoCard
+              key={todo.id}
+              {...todo}
+              onClick={() => toggleTodo(todo.id)}
+            />
+          ))}
         </div>
       </div>
-      {filteredTodos.map(
-        (
-          todo // Render filtered todos
-        ) => (
-          <TodoCard
-            key={todo.id}
-            {...todo}
-            onClick={() => toggleTodo(todo.id)}
-          />
-        )
-      )}
-    </div>
+    </>
   );
 };
 
