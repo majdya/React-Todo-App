@@ -37,6 +37,18 @@ const TodoList = () => {
     },
   });
 
+  const removeTodoMutation = useMutation({
+    mutationFn: async (id: string) => {
+      //Replace with api
+      return id;
+    },
+    onSuccess: (id) => {
+      queryClient.setQueryData(["todos"], (oldTodos: Todo[] = []) =>
+        oldTodos.filter((todo) => todo.id !== id)
+      );
+    },
+  });
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
@@ -50,6 +62,7 @@ const TodoList = () => {
             key={todo.id}
             {...todo}
             onClick={() => toggleTodoMutation.mutate(todo.id)}
+            onRemove={() => removeTodoMutation.mutate(todo.id)}
           />
         ))}
       </div>
