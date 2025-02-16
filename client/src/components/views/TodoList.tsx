@@ -1,23 +1,45 @@
-import React, { Suspense } from "react";
-
+// src/components/TodoList.jsx
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "@/queries/todosQueries";
-
 import { Input } from "@/components/ui/input";
-import { Button } from "../ui/button";
-
+import { Button } from "@/components/ui/button";
 import { Todo } from "@/types/todo";
 import TodoCard from "./TodoCard";
-import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid"; // Import search icon (example)
 
 const TodoList = () => {
-  const { data: initialTodos } = useQuery<Todo[]>({
+  const { data: initialTodos, isLoading } = useQuery({
     queryKey: ["todos"],
     queryFn: getTodos,
-    suspense: true,
   });
 
-  const [todos, setTodos] = useState<Todo[]>(initialTodos || []);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(""); // Debounced term
+
+  useEffect(() => {
+    if (initialTodos) {
+      setTodos(initialTodos);
+    }
+  }, [initialTodos]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm); // Update debounced term after delay
+    }, 300); // Adjust delay as needed (e.g., 300ms)
+
+    return () => clearTimeout(timer); // Clear timer if input changes
+  }, [searchTerm]);
+
+  const filteredTodos = useMemo(() => {
+    // Memoize filteredTodos
+    return todos.filter((todo) =>
+      todo.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+    );
+  }, [todos, debouncedSearchTerm]); // Only recalculate if todos or searchTerm change
 
   const toggleTodo = (id: string) => {
     setTodos((prevTodos) =>
@@ -27,29 +49,61 @@ const TodoList = () => {
     );
   };
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div
-        key="container"
-        className="flex flex-col w-[95%] items-center mt-20 gap-5"
-      >
-        <div className="flex flex-row gap-2">
-          <Input
-            className="field-sizing-content"
-            placeholder="New Todo"
-          ></Input>
-          <Button className="w-fit">Add Todo</Button>
-        </div>
+  const handleAddTodo = () => {
+    const text = newTodoText.trim();
+    if (text !== "") {
+      const newTodo: Todo = {
+        id: uuidv4(),
+        title: text,
+        completed: false,
+      };
+      setTodos([...todos, newTodo]);
+      setNewTodoText("");
+    }
+  };
 
-        {todos.map((todo) => (
+  if (isLoading) return <div>Loading...</div>;
+
+  return (
+    <div className="flex flex-col w-[95%] items-center mt-20 gap-5">
+      <div className="flex flex-col ">
+        <div className="flex flex-row gap-5">
+          <Input
+            className="w-full"
+            placeholder="New Todo"
+            value={newTodoText}
+            onChange={(e) => setNewTodoText(e.target.value)}
+          />
+          <Button className="w-fit" onClick={handleAddTodo}>
+            Add Todo
+          </Button>
+        </div>
+        {/* Search Input */}
+        {/* Icon container */}
+        {/* Add the icon */}
+        <div className="flex items-center gap-12 pl-3 ">
+          <Input
+            className="full"
+            placeholder="Search Todos"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <MagnifyingGlassCircleIcon className="h-20 w-20 pointer-events-none" />
+        </div>
+      </div>
+      {filteredTodos.map(
+        (
+          todo // Render filtered todos
+        ) => (
           <TodoCard
             key={todo.id}
             {...todo}
             onClick={() => toggleTodo(todo.id)}
           />
-        ))}
-      </div>
-    </Suspense>
+        )
+      )}
+    </div>
   );
 };
+
 export default TodoList;
