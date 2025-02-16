@@ -1,14 +1,17 @@
 import { useState, useMemo } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "@/queries/todosQueries";
 import { Todo, TodoCardProps } from "@/types/todo";
 import TodoCard from "./TodoCard";
 import AddTodo from "./AddTodo";
 import SearchTodo from "./SearchTodo";
+import {
+  useToggleTodoMutation,
+  useUpdateTitleMutation,
+  useRemoveTodoMutation,
+} from "@/mutations/todoMutations";
 
 const TodoList = () => {
-  const queryClient = useQueryClient();
-
   const { data: todos = [], isLoading } = useQuery({
     queryKey: ["todos"],
     queryFn: getTodos,
@@ -18,36 +21,15 @@ const TodoList = () => {
 
   const filteredTodos = useMemo(
     () =>
-      todos.filter((todo: Todo) =>
-        todo.title.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
+      todos.filter((todo: Todo) => {
+        return todo.title.toLowerCase().includes(searchTerm.toLowerCase());
+      }),
     [todos, searchTerm]
   );
 
-  const toggleTodoMutation = useMutation({
-    mutationFn: async (id: string) => {
-      return id;
-    },
-    onSuccess: (id) => {
-      queryClient.setQueryData(["todos"], (oldTodos: Todo[] = []) =>
-        oldTodos.map((todo) =>
-          todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        )
-      );
-    },
-  });
-
-  const removeTodoMutation = useMutation({
-    mutationFn: async (id: string) => {
-      //Replace with api
-      return id;
-    },
-    onSuccess: (id) => {
-      queryClient.setQueryData(["todos"], (oldTodos: Todo[] = []) =>
-        oldTodos.filter((todo) => todo.id !== id)
-      );
-    },
-  });
+  const toggleTodoMutation = useToggleTodoMutation();
+  const updateTitleMutation = useUpdateTitleMutation();
+  const removeTodoMutation = useRemoveTodoMutation();
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -62,6 +44,12 @@ const TodoList = () => {
             key={todo.id}
             {...todo}
             onClick={() => toggleTodoMutation.mutate(todo.id)}
+            onUpdate={(id, newTitle) => {
+              return updateTitleMutation.mutate({
+                id,
+                newTitle,
+              });
+            }}
             onRemove={() => removeTodoMutation.mutate(todo.id)}
           />
         ))}
