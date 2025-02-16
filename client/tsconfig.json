@@ -5,8 +5,6 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    // "include": ["src/**/*"],
-    // "exclude": ["node_modules"],
     // shadcn
     "baseUrl": ".",
     "paths": {
