@@ -43,7 +43,7 @@ const AddTodo = () => {
         value={newTodoText}
         onChange={(e) => setNewTodoText(e.target.value)}
         maxLength={MAX_LENGTH}
-        className="flex-grow pr-14"
+        className="flex-grow"
       />
       <Button
         onClick={handleAddTodo}
