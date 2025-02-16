@@ -1,7 +1,9 @@
-import { Card, CardHeader, CardTitle } from "../ui/card";
+// import { Card, CardHeader, CardTitle } from "../ui/card";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Todo } from "@/types/todo";
+
+import { Label } from "@/components/ui/label";
 
 interface TodoCardProps extends Todo {
   onClick: () => void;
@@ -9,16 +11,22 @@ interface TodoCardProps extends Todo {
 
 const TodoCard = ({ id, title, completed, onClick }: TodoCardProps) => {
   return (
-    <Card key={id} className="cursor-pointer  w-[40%]" onClick={onClick}>
-      <CardHeader className="flex flex-row gap-2 items-center">
-        <Checkbox
-          id={id.toString()}
-          checked={completed}
-          onCheckedChange={onClick} // Toggle when clicked
-        />
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-    </Card>
+    <>
+      <div className={` p-4`}>
+        <div className={`flex items-center space-x-4  `}>
+          <Checkbox id={id} checked={completed} onCheckedChange={onClick} />
+          <Label
+            className={`
+              text-3xl 
+              ${completed ? `line-through text-indigo-400` : ""}
+              `}
+            htmlFor={id}
+          >
+            {title}
+          </Label>
+        </div>
+      </div>
+    </>
   );
 };
 
