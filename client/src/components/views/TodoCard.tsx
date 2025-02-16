@@ -1,13 +1,9 @@
 // import { Card, CardHeader, CardTitle } from "../ui/card";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { Todo } from "@/types/todo";
+import { TodoCardProps } from "@/types/todo";
 
 import { Label } from "@/components/ui/label";
-
-interface TodoCardProps extends Todo {
-  onClick: () => void;
-}
 
 const TodoCard = ({ id, title, completed, onClick }: TodoCardProps) => {
   return (
