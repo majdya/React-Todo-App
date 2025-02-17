@@ -6,7 +6,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const getTodos = async () => {
+const getTodos = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
   if (!response.ok) {
     const errorText = await response.text();
@@ -17,6 +17,13 @@ export const getTodos = async () => {
   return response.json();
 };
 
+export const useJPHTodos = () => {
+  return useQuery({
+    queryKey: ["todos"],
+    queryFn: getTodos,
+  });
+};
+
 const fetchTodos = async () => {
   let { data: todos, error } = await supabase.from("todos").select("*");
   if (error) throw new Error(error.message);
@@ -24,13 +31,7 @@ const fetchTodos = async () => {
   return todos;
 };
 
-export const useTodos = (tmp?: boolean) => {
-  if (tmp) {
-    return useQuery({
-      queryKey: ["todos"],
-      queryFn: getTodos,
-    });
-  }
+export const useTodos = () => {
   return useQuery({
     queryKey: ["todos"],
     queryFn: fetchTodos,

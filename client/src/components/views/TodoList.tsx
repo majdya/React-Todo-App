@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useTodos } from "@/queries/todosQueries";
+import { useTodos, useJPHTodos } from "@/queries/todosQueries";
 import { Todo, TodoCardProps } from "@/types/todo";
 import TodoCard from "./TodoCard";
 import AddTodo from "./AddTodo";
@@ -11,7 +11,7 @@ import {
 } from "@/mutations/todoMutations";
 
 const TodoList = () => {
-  const { data: todos = [], error, isLoading } = useTodos(true);
+  const { data: todos = [], error, isLoading } = useJPHTodos();
 
   const [searchTerm, setSearchTerm] = useState("");
 

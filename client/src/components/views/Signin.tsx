@@ -19,17 +19,6 @@ const Signin = () => {
 
       console.log("Sign in successful, user:", result.user);
 
-      // // Fetch user profile
-      // if (result.todos) {
-      //   const profileResult = await fetchUserProfile(result.user.id);
-      //   if (profileResult.success) {
-      //     console.log("User profile:", profileResult.profile);
-      //   } else {
-      //     console.error("Error fetching user profile:", profileResult.error);
-      //   }
-      // }
-
-      // Redirect to Home Page
       navigate("/");
     } catch (error: any) {
       console.error(error);
