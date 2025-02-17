@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getTodos } from "@/queries/todosQueries";
+import { useTodos } from "@/queries/todosQueries";
 import { Todo, TodoCardProps } from "@/types/todo";
 import TodoCard from "./TodoCard";
 import AddTodo from "./AddTodo";
@@ -12,10 +11,7 @@ import {
 } from "@/mutations/todoMutations";
 
 const TodoList = () => {
-  const { data: todos = [], isLoading } = useQuery({
-    queryKey: ["todos"],
-    queryFn: getTodos,
-  });
+  const { data: todos = [], error, isLoading } = useTodos(true);
 
   const [searchTerm, setSearchTerm] = useState("");
 
