@@ -11,7 +11,9 @@ const App = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <TodoList></TodoList>
+        <div className="h-500 pt-5 bg-gradient-to-tr from-zinc-200 via-indigo-500 to-slate-500">
+          <TodoList />
+        </div>
       </QueryClientProvider>
     </>
   );

@@ -34,7 +34,7 @@ const TodoList = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="container mx-auto max-w-[90%] lg:max-w-[50%] mt-6 p-4 lg:p-8 rounded-3xl bg-gray-200">
+    <div className="container mx-auto max-w-[90%] lg:max-w-[50%] mt-6 p-4 lg:p-8 rounded-3xl bg-zinc-300">
       <AddTodo />
       <SearchTodo onSearch={setSearchTerm} />
 
