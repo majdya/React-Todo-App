@@ -3,36 +3,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Todo } from "@/types/todo";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNewTodoMutation } from "@/api/todo";
+
 const MAX_LENGTH = 50;
 
 const AddTodo = () => {
   const queryClient = useQueryClient();
   const [newTodoText, setNewTodoText] = useState("");
 
-  const addTodoMutation = useMutation({
-    mutationFn: async (newTodo: Todo) => {
-      // TODO: replace with api
-      return newTodo;
-    },
-    onSuccess: (newTodo) => {
-      queryClient.setQueryData(["todos"], (oldTodos: Todo[] = []) => [
-        ...oldTodos,
-        newTodo,
-      ]);
-      setNewTodoText("");
-    },
-  });
+  const { mutate: addTodo, isLoading } = useNewTodoMutation();
 
   const handleAddTodo = () => {
     const text = newTodoText.trim();
     if (text.length > 0) {
-      addTodoMutation.mutate({
-        id: uuidv4(),
-        title: text,
-        completed: false,
-      });
+      addTodo(
+        {
+          id: uuidv4(),
+          title: text,
+          completed: false,
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(["todos"]);
+            setNewTodoText("");
+          },
+        }
+      );
     }
   };
 
@@ -47,10 +44,10 @@ const AddTodo = () => {
       />
       <Button
         onClick={handleAddTodo}
-        disabled={!newTodoText.trim()}
+        disabled={!newTodoText.trim() || isLoading}
         className="relative"
       >
-        <span className="absolute bottom-2.5 right-18 text-xs text-gray-600  px-1 rounded">
+        <span className="absolute bottom-2.5 right-18 text-xs text-gray-600 px-1 rounded">
           {newTodoText.length}/{MAX_LENGTH}
         </span>
         <Plus size={40} />
