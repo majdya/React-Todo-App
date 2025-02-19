@@ -1,6 +1,6 @@
 "use client";
 
-import TodoList from "./components/views/TodoList";
+import TodoList from "../components/views/TodoList";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 import "./App.css";
@@ -15,7 +15,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const App = () => {
+const HomeComponent = () => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
@@ -57,4 +57,10 @@ const App = () => {
   );
 };
 
-export default App;
+// export default App;
+
+import { createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/")({
+  component: HomeComponent,
+});
