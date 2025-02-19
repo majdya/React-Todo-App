@@ -36,6 +36,7 @@ const AddTodo = () => {
   return (
     <div className="flex items-center p-3 gap-3 relative">
       <Input
+        onKeyDown={(e) => e.key === "Enter" && handleAddTodo()}
         placeholder="Add a New Todo"
         value={newTodoText}
         onChange={(e) => setNewTodoText(e.target.value)}
