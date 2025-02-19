@@ -1,12 +1,24 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
-
-import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+
+import {
+  NotFoundRoute,
+  RouterProvider,
+  createRouter,
+} from "@tanstack/react-router";
+
+import { Route as rootRoute } from "./routes/__root.tsx";
+
+const notFoundRoute = new NotFoundRoute({
+  getParentRoute: () => rootRoute,
+  component: () => "404 Not Found X!",
+});
 
 // Set up a Router instance
 const router = createRouter({
   routeTree,
+  notFoundRoute,
   defaultPreload: "intent",
 });
 
