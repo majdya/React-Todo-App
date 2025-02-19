@@ -6,14 +6,13 @@ const queryClient = new QueryClient();
 import "./App.css";
 import { useEffect, useState } from "react";
 
-import { createClient, Session } from "@supabase/supabase-js";
+import { Session } from "@supabase/supabase-js";
+import { getSupabaseClient } from "@/lib/supabaseClient";
+
+const supabase = getSupabaseClient();
+
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const HomeComponent = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -50,6 +49,15 @@ const HomeComponent = () => {
           className={`min-h-lvh pt-5 bg-gradient-to-tr top-0 z-1 sticky
                     from-zinc-200 via-indigo-500 to-slate-500`}
         >
+          <Button
+            className="flex"
+            onClick={async () => {
+              await supabase.auth.signOut();
+            }}
+          >
+            Log out
+          </Button>
+
           <TodoList />
         </div>
       </QueryClientProvider>
@@ -57,9 +65,8 @@ const HomeComponent = () => {
   );
 };
 
-// export default App;
-
 import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
