@@ -19,68 +19,64 @@ const TodoCard = ({
   id,
   title,
   completed,
-}: // onClick,
-// onRemove,
-// onUpdate,
-TodoCardProps) => {
+  onRemove,
+  onUpdate,
+}: TodoCardProps) => {
   const [newTitle, setNewTitle] = useState(title);
   const [open, setOpen] = useState(false);
 
-  const handleUpdate = () => {
+  const handleUpdateTitle = () => {
     if (newTitle.trim() && newTitle !== title) {
-      // onUpdate(id, newTitle);
+      onUpdate({ id, title: newTitle, completed });
     }
     setOpen(false);
+  };
+
+  const handleToggleCompleted = () => {
+    onUpdate({ id, title, completed: !completed });
   };
 
   return (
     <div className="px-4 py-2 m-1 rounded-lg bg-gray-100 shadow-sm">
       <div className="flex flex-row items-center space-x-4">
-        <div className=" flex flex-col lg:flex-row gap-2">
-          {/* Delete Button */}
-          {/* <Button variant="destructive" onClick={() => onRemove(id)}> */}
-          <Trash />
-          {/* </Button> */}
-
-          {/* Open Edit Modal */}
+        <div className="flex flex-col lg:flex-row gap-2">
+          <Button variant="destructive" onClick={() => onRemove(id)}>
+            <Trash />
+          </Button>
 
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant="default">
-                <Pencil strokeWidth={2} size={60} />
+                <Pencil strokeWidth={2} size={20} />
               </Button>
             </DialogTrigger>
-            <div className={`mt-0`}>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Edit Todo Title</DialogTitle>
-                  <DialogDescription>
-                    Update your task title and click Save.
-                  </DialogDescription>
-                </DialogHeader>
-                <Input
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                />
-
-                <DialogFooter>
-                  <Button variant="secondary" onClick={() => setOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleUpdate}>Save</Button>
-                </DialogFooter>
-              </DialogContent>
-            </div>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Todo Title</DialogTitle>
+                <DialogDescription>
+                  Update your task title and click Save.
+                </DialogDescription>
+              </DialogHeader>
+              <Input
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+              />
+              <DialogFooter>
+                <Button variant="secondary" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateTitle}>Save</Button>
+              </DialogFooter>
+            </DialogContent>
           </Dialog>
         </div>
-        {/* Checkbox for Completion */}
+
         <Checkbox
           id={id}
           checked={completed}
-          // onCheckedChange={() => onClick(id)}
+          onCheckedChange={handleToggleCompleted}
         />
 
-        {/* Title with Edit Button */}
         <Label
           className={`line-clamp-2 lg:line-clamp-1 text-2xl ${
             completed ? "line-through text-indigo-400" : ""
