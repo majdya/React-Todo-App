@@ -19,16 +19,16 @@ const TodoCard = ({
   id,
   title,
   completed,
-  onClick,
-  onRemove,
-  onUpdate,
-}: TodoCardProps) => {
+}: // onClick,
+// onRemove,
+// onUpdate,
+TodoCardProps) => {
   const [newTitle, setNewTitle] = useState(title);
   const [open, setOpen] = useState(false);
 
   const handleUpdate = () => {
     if (newTitle.trim() && newTitle !== title) {
-      onUpdate(id, newTitle);
+      // onUpdate(id, newTitle);
     }
     setOpen(false);
   };
@@ -38,9 +38,9 @@ const TodoCard = ({
       <div className="flex flex-row items-center space-x-4">
         <div className=" flex flex-col lg:flex-row gap-2">
           {/* Delete Button */}
-          <Button variant="destructive" onClick={() => onRemove(id)}>
-            <Trash />
-          </Button>
+          {/* <Button variant="destructive" onClick={() => onRemove(id)}> */}
+          <Trash />
+          {/* </Button> */}
 
           {/* Open Edit Modal */}
 
@@ -77,7 +77,7 @@ const TodoCard = ({
         <Checkbox
           id={id}
           checked={completed}
-          onCheckedChange={() => onClick(id)}
+          // onCheckedChange={() => onClick(id)}
         />
 
         {/* Title with Edit Button */}
