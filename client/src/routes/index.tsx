@@ -6,8 +6,13 @@ const queryClient = new QueryClient();
 import "./App.css";
 import { useEffect, useState } from "react";
 
+import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+
 import { Session } from "@supabase/supabase-js";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const supabase = getSupabaseClient();
 
@@ -34,11 +39,31 @@ const HomeComponent = () => {
   if (!session)
     return (
       <div
-        className={`flex justify-center 
-            min-h-lvh pt-5 bg-gradient-to-tr top-0 z-1 sticky
-           from-zinc-400 via-indigo-800 to-slate-700`}
+        className={`
+          flex justify-center min-h-lvh pt-5 bg-gradient-to-tr
+          top-0 z-1 sticky from-zinc-400 via-indigo-800 to-slate-700`}
       >
-        <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
+        <Auth
+          supabaseClient={supabase}
+          providers={[]}
+          appearance={{
+            theme: ThemeSupa,
+            variables: {
+              default: {
+                colors: {
+                  // messageText: "white",
+
+                  inputPlaceholder: "white",
+                  inputLabelText: "white",
+                  anchorTextColor: "white",
+                  // brand: "red",
+                  // brandAccent: "darkred",
+                },
+              },
+            },
+          }}
+          // theme="dark"
+        />
       </div>
     );
 
@@ -60,13 +85,11 @@ const HomeComponent = () => {
 
           <TodoList />
         </div>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
   );
 };
-
-import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
