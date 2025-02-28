@@ -51,18 +51,14 @@ const HomeComponent = () => {
             variables: {
               default: {
                 colors: {
-                  // messageText: "white",
-
                   inputPlaceholder: "white",
                   inputLabelText: "white",
                   anchorTextColor: "white",
-                  // brand: "red",
-                  // brandAccent: "darkred",
                 },
               },
             },
           }}
-          // theme="dark"
+        // theme="dark"
         />
       </div>
     );
